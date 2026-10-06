@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: ${{ matrix.os }} / Rust ${{ matrix.rust }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            rust: stable
+          - os: macos-14
+            rust: stable
+          - os: ubuntu-24.04
+            rust: 1.88.0
+    env:
+      RUSTUP_TOOLCHAIN: ${{ matrix.rust }}
+      CARGO_TERM_COLOR: always
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+      - name: Install Rust toolchain
+        run: |
+          rustup toolchain install "$RUSTUP_TOOLCHAIN" --profile minimal --component rustfmt --component clippy
+          echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
+      - name: Check against minimum Git version
+        if: matrix.rust == '1.88.0'
+        run: |
+          source_dir="$RUNNER_TEMP/git-source"
+          install_dir="$RUNNER_TEMP/git-min"
+          mkdir -p "$source_dir"
+          curl --fail --silent --show-error --location \
+            https://codeload.github.com/git/git/tar.gz/6cd33dceed60949e2dbc32e3f0f5e67c4c882e1e \
+            | tar -xz --strip-components=1 -C "$source_dir"
+          make -C "$source_dir" -j2 prefix="$install_dir" \
+            NO_OPENSSL=YesPlease NO_CURL=YesPlease NO_EXPAT=YesPlease \
+            NO_GETTEXT=YesPlease NO_TCLTK=YesPlease NO_PERL=YesPlease \
+            NO_REGEX=NeedsStartEnd install
+          "$install_dir/bin/git" --version
+          echo "$install_dir/bin" >> "$GITHUB_PATH"
+      - name: Formatting
+        run: cargo fmt --all -- --check
+      - name: Clippy
+        run: cargo clippy --all-targets --locked -- -D warnings
+      - name: Rust regressions
+        run: cargo test --all-targets --locked
+      - name: Installer and release regressions
+        run: python3 -m unittest discover -s tests -p 'test_*.py'
+      - name: Shell validation
+        if: runner.os == 'Linux'
+        run: shellcheck install.sh scripts/install.sh
+      - name: Build release binary
+        run: cargo build --release --locked
+      - name: Real terminal checks
+        run: |
+          python3 -m pip install -r scripts/requirements.txt
+          python3 scripts/tui_smoke.py target/release/wtm
