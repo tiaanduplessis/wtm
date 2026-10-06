@@ -7,6 +7,10 @@ hidden folders, ignored directories, and linked worktrees whose main repository 
 Use the keyboard, mouse, or scriptable CLI to inspect worktrees and review cleanup.
 The project is in early development. No public release has been published yet.
 
+![wtm dashboard showing seven worktrees across three repositories, with clean, dirty, locked, and primary states](docs/images/dashboard.png)
+
+Live terminal output from disposable demo repositories; see [how these captures are made](docs/screenshots.md).
+
 ## Install
 
 Git 2.36 or newer is required. Release binaries do not require Rust or a package manager.
@@ -176,6 +180,10 @@ Every management operation revalidates repository identity and the selected regi
 before applying Git's own checks. Git provides file locking; the tool does not promise
 atomicity against external changes between separate commands. Bulk removal reports
 partial outcomes and refreshes the inventory if a later item fails.
+
+![Cleanup review showing a marked clean worktree, retained branches, and the requirement to type REMOVE before confirming](docs/images/cleanup-review.png)
+
+Cleanup requires review and typed confirmation, whether you use the keyboard or mouse.
 
 Prune is repository-wide: it previews stale administrative records and may include
 registrations outside the current scan directory. Locked registrations are preserved.
