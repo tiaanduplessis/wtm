@@ -1,13 +1,12 @@
 # Changelog
 
-Changes are recorded here before releases. No public release has been published yet.
+Changes are recorded here before releases.
 
 ## Unreleased
 
+## 0.1.0 - 2026-10-06
+
 - Preserve nested-repository protection when a worktree's `.git` marker is a file.
-
-## 0.1.0
-
 - Recursively discover nested, hidden, and ignored Git repositories and linked worktrees.
 - Inspect branches, commits, activity, local changes, upstream state, locks, and stale registrations.
 - Manage worktrees through a keyboard and mouse dashboard or explicit CLI commands.

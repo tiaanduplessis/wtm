@@ -15,13 +15,14 @@ fallback; it has no Homebrew formula, crates.io publication, or package-manager 
    `worktrees`, `rust`, `cli`, `tui`, `terminal`.
 4. Enable GitHub Actions and confirm the first CI run passes. Review workflow permissions;
    pull requests have read-only permissions and publication is limited to the release job.
-5. Enable private vulnerability reporting in Settings → Code security. Verify that the
+5. Enable private vulnerability reporting in Settings → Advanced Security. Verify that the
    Security tab's **Report a vulnerability** route is available. Files alone do not enable it.
 6. Check the available secret-scanning and push-protection settings. Use branch/tag rules
    appropriate for a solo maintainer; require the stable Linux, macOS, and MSRV checks
    after their first successful runs. Restrict release-tag writes to maintainers.
 7. Make the first draft release using the steps below. Test downloads from that draft
-   before publishing it. Once public binaries exist, remove the README's pre-release note.
+   before publishing it. Keep the README installation instructions aligned with the
+   published assets.
 
 GitHub settings, hosted CI, downloads, and security reporting need live verification
 after repository creation. Local workflow files do not prove those features are enabled.

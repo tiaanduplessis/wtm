@@ -5,7 +5,7 @@ It scans the directory you give it, including repositories nested inside other c
 hidden folders, ignored directories, and linked worktrees whose main repository lives elsewhere.
 
 Use the keyboard, mouse, or scriptable CLI to inspect worktrees and review cleanup.
-The project is in early development. No public release has been published yet.
+The project is in early development; commands and JSON fields may change before 1.0.
 
 ![wtm dashboard showing seven worktrees across three repositories, with clean, dirty, locked, and primary states](docs/images/dashboard.png)
 
@@ -18,7 +18,7 @@ The release targets are macOS and Linux on x86_64 and Arm64. Windows is not a re
 target; compatibility there is unverified. Use a terminal with at least 30 columns
 and 14 rows for the dashboard.
 
-After the first GitHub release is published, install its latest stable binary with:
+Install the latest stable binary with:
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/tiaanduplessis/wtm/main/install.sh | sh
@@ -38,8 +38,8 @@ license, documentation, and dependency notices. The checksums are not signatures
 
 ### Source fallback
 
-Install [Rust 1.88 or newer](https://rustup.rs). After the first release, build from its
-source without cloning a checkout yourself:
+Install [Rust 1.88 or newer](https://rustup.rs), then build from the release source
+without cloning a checkout yourself:
 
 ```sh
 cargo install --git https://github.com/tiaanduplessis/wtm.git --tag v0.1.0 \
@@ -54,7 +54,7 @@ wtm list . --json
 wtm .
 ```
 
-Once the repository is public, a checkout is available from
+A checkout is available from
 `git clone https://github.com/tiaanduplessis/wtm.git`. The equivalent direct Cargo
 command is `cargo install --path . --locked --root "$HOME/.local"`.
 `WTM_INSTALL_ROOT` can change the source install root. Installation does not create
@@ -277,8 +277,8 @@ The optional Python/pyte smoke check exercises the real PTY, including piped std
 terminal restoration, resize handling, directory selection, and Git mutations.
 
 CI is configured for Linux, macOS, and Rust 1.88. Release jobs build and test all four
-native targets before assembling a draft. Hosted results and downloads must be verified
-after the GitHub repository exists; local workflow files are not evidence of a passed run.
+native targets before assembling a draft. Maintainers verify the draft's downloads
+before publishing.
 
 ## License and support
 
