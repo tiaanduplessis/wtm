@@ -1373,7 +1373,9 @@ fn require_no_nested_repositories(worktree: &Worktree) -> Result<()> {
         }
         if entry.file_name() == ".git" {
             if entry.depth() == 1 {
-                entries.skip_current_dir();
+                if entry.file_type().is_dir() {
+                    entries.skip_current_dir();
+                }
                 continue;
             }
             bail!(

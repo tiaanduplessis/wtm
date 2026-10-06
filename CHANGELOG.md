@@ -4,6 +4,8 @@ Changes are recorded here before releases. No public release has been published 
 
 ## Unreleased
 
+- Preserve nested-repository protection when a worktree's `.git` marker is a file.
+
 ## 0.1.0
 
 - Recursively discover nested, hidden, and ignored Git repositories and linked worktrees.
